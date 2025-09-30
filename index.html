@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Malaysia Palm Oil Production by State (2022)</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
   <style>
@@ -19,8 +20,13 @@
   <div id="vis"></div>
   
   <script>
+    // Make sure the JSON file is in the same directory as your HTML file
     vegaEmbed('#vis', 'malaysia_palm_oil_production_by_state.vg.json')
-      .catch(console.error);
+      .catch(error => {
+        console.error('Error loading visualization:', error);
+        document.getElementById('vis').innerHTML = 
+          '<p>Error loading visualization. Check browser console for details.</p>';
+      });
   </script>
 </body>
 </html>
