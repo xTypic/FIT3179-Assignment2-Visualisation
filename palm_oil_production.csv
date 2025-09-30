@@ -1,0 +1,17 @@
+state,production_tonnes,production_level,longitude,latitude
+Johor,2969525,High,103.730,1.485
+Pahang,3013127,High,103.326,3.813
+Sabah,4286665,High,116.075,5.979
+Sarawak,4005425,High,110.335,1.553
+Perak,1866423,Medium,101.090,4.592
+Selangor,498904,Medium,101.519,3.074
+Kedah,237382,Medium,100.369,6.118
+Kelantan,336061,Low,102.238,6.125
+Terengganu,407500,Low,103.133,5.312
+Negeri Sembilan,675767,Low,101.942,2.726
+Melaka,0,Low,102.250,2.189
+Perlis,0,Minimal/None,100.204,6.444
+Pulau Pinang,0,Minimal/None,100.334,5.414
+Kuala Lumpur,0,Minimal/None,101.693,3.139
+Labuan,0,Minimal/None,115.230,5.283
+Putrajaya,0,Minimal/None,101.696,2.926

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Palm Oil Production by Malaysian State (2022)",
+    "fontSize": 16,
+    "anchor": "start"
+  },
+  "width": 800,
+  "height": 600,
+  "projection": {
+    "type": "mercator",
+    "center": [109.5, 4],
+    "scale": 1400
+  },
+  "resolve": {
+    "scale": {
+      "size": "independent"
+    }
+  },
+  
+  "layer": [
+    {
+      "name": "ocean",
+      "data": {"sphere": true},
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e6f3ff"
+      }
+    },
+    {
+      "name": "graticule",
+      "data": {
+        "graticule": {"step": [30, 30]}
+      },
+      "mark": {
+        "type": "geoshape", 
+        "fill": null,
+        "stroke": "#999999",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "name": "states_base",
+      "data": {
+        "url": "malaysia_states.topojson",
+        "format": {"type": "topojson", "feature": "ne_10m_admin_1_states_provinces"}
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#f9f9f9",
+        "stroke": "#666666",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "name": "proportional_symbols",
+      "data": {
+        "url": "palm_oil_production.csv"
+      },
+      "transform": [
+        {
+          "filter": "datum.production_tonnes != null && datum.production_tonnes > 0"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "opacity": 0.75,
+        "stroke": "#8B0000",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "production_tonnes",
+          "type": "quantitative",
+          "title": "Production (tonnes)",
+          "scale": {
+            "type": "sqrt",
+            "domain": [0, 5000000],
+            "range": [100, 2000]
+          }
+        },
+        "color": {
+          "field": "production_tonnes",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "reds",
+            "domain": [0, 5000000]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          {"field": "state", "type": "nominal", "title": "State"},
+          {
+            "field": "production_tonnes", 
+            "type": "quantitative", 
+            "title": "Production (tonnes)", 
+            "format": ","
+          }
+        ]
+      }
+    }
+  ]
+}
