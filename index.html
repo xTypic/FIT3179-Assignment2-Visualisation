@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Malaysia Palm Oil Production by State (2022)</title>
-  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
   <style>
@@ -18,57 +17,10 @@
 <body>
   <h1>Malaysia Palm Oil Production by State (2022)</h1>
   <div id="vis"></div>
-
+  
   <script>
-    const spec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "description": "Palm oil production by Malaysian states in 2022",
-      "data": {
-        "values": [
-          {"State": "Sabah", "Production": 5200},
-          {"State": "Sarawak", "Production": 4300},
-          {"State": "Johor", "Production": 3100},
-          {"State": "Pahang", "Production": 2900},
-          {"State": "Perak", "Production": 2500},
-          {"State": "Negeri Sembilan", "Production": 1800},
-          {"State": "Selangor", "Production": 1600},
-          {"State": "Kelantan", "Production": 1400},
-          {"State": "Terengganu", "Production": 1300},
-          {"State": "Kedah", "Production": 900},
-          {"State": "Melaka", "Production": 700},
-          {"State": "Penang", "Production": 600},
-          {"State": "Perlis", "Production": 300}
-        ]
-      },
-      "mark": "bar",
-      "encoding": {
-        "x": {
-          "field": "State",
-          "type": "ordinal",
-          "sort": "-y",
-          "axis": {"labelAngle": -45}
-        },
-        "y": {
-          "field": "Production",
-          "type": "quantitative",
-          "title": "Production (in thousand tonnes)"
-        },
-        "color": {
-          "field": "Production",
-          "type": "quantitative",
-          "scale": {"scheme": "yellowgreenblue"},
-          "legend": {"title": "Production"}
-        },
-        "tooltip": [
-          {"field": "State", "type": "ordinal"},
-          {"field": "Production", "type": "quantitative"}
-        ]
-      },
-      "width": "container",
-      "height": 400
-    };
-
-    vegaEmbed('#vis', spec).catch(console.error);
+    vegaEmbed('#vis', 'malaysia_palm_oil_production_by_state.vg.json')
+      .catch(console.error);
   </script>
 </body>
 </html>
