@@ -1,0 +1,45 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Palm Oil Production Trends by State (2018-2022)",
+    "fontSize": 16,
+    "anchor": "start"
+  },
+  "width": 600,
+  "height": 400,
+  "data": {
+    "url": "palm_oil_production_multi_year.csv"
+  },
+  "mark": {
+    "type": "line",
+    "point": true
+  },
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "quantitative",
+      "title": "Year",
+      "axis": {"format": "d"}
+    },
+    "y": {
+      "field": "production_tonnes",
+      "type": "quantitative",
+      "title": "Production (tonnes)",
+      "axis": {
+        "format": ",.0f",
+        "labelExpr": "datum.value / 1000000"
+      },
+      "scale": {"domain": [0, 5500000]}
+    },
+    "color": {
+      "field": "state",
+      "type": "nominal",
+      "title": "State"
+    },
+    "tooltip": [
+      {"field": "state", "type": "nominal", "title": "State"},
+      {"field": "year", "type": "quantitative", "title": "Year"},
+      {"field": "production_tonnes", "type": "quantitative", "title": "Production", "format": ","}
+    ]
+  }
+}
