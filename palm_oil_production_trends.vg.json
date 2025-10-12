@@ -10,6 +10,24 @@
   "data": {
     "url": "palm_oil_production_multi_year.csv"
   },
+  "params": [
+    {
+      "name": "state_selection",
+      "select": {
+        "type": "point",
+        "fields": ["state"],
+        "on": "click",
+        "toggle": false,
+        "clear": false
+      },
+      "bind": "legend"
+    }
+  ],
+  "transform": [
+    {
+      "filter": {"param": "state_selection"}
+    }
+  ],
   "mark": {
     "type": "line",
     "point": true
@@ -35,6 +53,10 @@
       "field": "state",
       "type": "nominal",
       "title": "State"
+    },
+    "opacity": {
+      "condition": {"param": "state_selection", "value": 1},
+      "value": 0.2
     },
     "tooltip": [
       {"field": "state", "type": "nominal", "title": "State"},
