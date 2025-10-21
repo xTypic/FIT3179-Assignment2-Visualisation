@@ -1,23 +1,29 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
-    "text": "Palm Oil Production by Malaysian State (2022)",
+    "text": "Palm Oil Production by Malaysian State (2018-2022)",
     "fontSize": 16,
     "anchor": "start"
   },
-  "width": 800,
+  "width": 1100,
   "height": 600,
   "projection": {
     "type": "mercator",
     "center": [109.5, 4],
-    "scale": 1400
+    "scale": 3000
   },
-  "resolve": {
-    "scale": {
-      "size": "independent"
+  "params": [
+    {
+      "name": "year_select",
+      "value": 2022,
+      "bind": {
+        "input": "select",
+        "options": [2018, 2019, 2020, 2021, 2022],
+        "labels": ["2018", "2019", "2020", "2021", "2022"],
+        "name": "Select Year: "
+      }
     }
-  },
-  
+  ],
   "layer": [
     {
       "name": "ocean",
@@ -59,14 +65,14 @@
       },
       "transform": [
         {
-          "filter": "datum.production_tonnes != null && datum.production_tonnes > 0"
+          "filter": "datum.year == year_select"
         }
       ],
       "mark": {
         "type": "circle",
-        "opacity": 0.75,
-        "stroke": "#8B0000",
-        "strokeWidth": 1.5
+        "opacity": 0.7,
+        "stroke": "#ffffff",
+        "strokeWidth": 2
       },
       "encoding": {
         "longitude": {
@@ -78,32 +84,36 @@
           "type": "quantitative"
         },
         "size": {
-          "field": "production_tonnes",
+          "field": "production",
           "type": "quantitative",
           "title": "Production (tonnes)",
           "scale": {
             "type": "sqrt",
-            "domain": [0, 5000000],
-            "range": [100, 2000]
+            "domain": [200000, 5200000],
+            "range": [50, 1500]
+          },
+          "legend": {
+            "format": "~s"
           }
         },
         "color": {
-          "field": "production_tonnes",
+          "field": "production",
           "type": "quantitative",
+          "title": "Production Level",
           "scale": {
-            "scheme": "reds",
-            "domain": [0, 5000000]
+            "scheme": "greens",
+            "domain": [200000, 5200000]
           },
-          "legend": null
+          "legend": {
+            "format": "~s"
+          }
         },
         "tooltip": [
-          {"field": "state", "type": "nominal", "title": "State"},
-          {
-            "field": "production_tonnes", 
-            "type": "quantitative", 
-            "title": "Production (tonnes)", 
-            "format": ","
-          }
+          {"field": "State", "type": "nominal", "title": "State"},
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {"field": "production", "type": "quantitative", "title": "Production (tonnes)", "format": ","},
+          {"field": "longitude", "type": "quantitative", "title": "Longitude", "format": ".4f"},
+          {"field": "latitude", "type": "quantitative", "title": "Latitude", "format": ".4f"}
         ]
       }
     }

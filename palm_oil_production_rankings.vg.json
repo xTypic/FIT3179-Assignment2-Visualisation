@@ -1,0 +1,57 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 380,
+  "data": {"url": "palm_oil_production_multi_year.csv"},
+  "params": [
+    {
+      "name": "year_select",
+      "value": 2022,
+      "bind": {
+        "input": "select",
+        "options": [2018, 2019, 2020, 2021, 2022],
+        "labels": ["2018", "2019", "2020", "2021", "2022"],
+        "name": "Select Year: "
+      }
+    }
+  ],
+  "transform": [
+    {"filter": "datum.production_tonnes > 0 && datum.year == year_select"}
+  ],
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 4
+  },
+  "encoding": {
+    "y": {
+      "field": "state",
+      "type": "nominal",
+      "title": null,
+      "sort": {"field": "production_tonnes", "order": "descending"},
+      "axis": {"labelFontSize": 12, "labelFontWeight": "bold", "labelPadding": 10}
+    },
+    "x": {
+      "field": "production_tonnes",
+      "type": "quantitative",
+      "title": "Production (millions of tonnes)",
+      "axis": {
+        "format": ".1f",
+        "labelExpr": "datum.value / 1000000",
+        "labelFontSize": 11,
+        "titleFontSize": 12,
+        "grid": true
+      }
+    },
+    "color": {
+      "field": "production_tonnes",
+      "type": "quantitative",
+      "scale": {"scheme": "blues"},
+      "legend": null
+    },
+    "tooltip": [
+      {"field": "state", "type": "nominal", "title": "State"},
+      {"field": "year", "type": "ordinal", "title": "Year"},
+      {"field": "production_tonnes", "type": "quantitative", "title": "Production (tonnes)", "format": ","}
+    ]
+  }
+}

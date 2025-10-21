@@ -1,51 +1,633 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Malaysia Palm Oil Visualizations</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malaysia Palm Oil Production (2018-2022)</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      max-width: 1200px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .vis-container {
+    
+    html, body {
+      height: 100%;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #ffffff;
+      line-height: 1.6;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .header {
+      background-color: #16a34a;
+      color: white;
+      padding: 20px 30px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    .stats-bar {
+      background-color: #fef3c7;
+      padding: 20px 30px;
+      border-bottom: 2px solid #f59e0b;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #92400e;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: #78350f;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 25px;
+      flex: 1;
+      min-height: 0;
+    }
+    
+    .chart-section {
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      padding: 20px;
+      height: 100%;
+    }
+    
+    .rankings-section {
+      background-color: #dbeafe;
+      border: 2px solid #3b82f6;
+    }
+    
+    .trends-section {
+      background-color: #f3e8ff;
+      border: 2px solid #a855f7;
+    }
+    
+    .pie-section {
+      background-color: #fef7cd;
+      border: 2px solid #eab308;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .blue-title {
+      color: #1e40af;
+    }
+    
+    .purple-title {
+      color: #6b21a8;
+    }
+    
+    .yellow-title {
+      color: #854d0e;
+    }
+    
+    .section-note {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+    
+    .chart-container {
+      flex: 1;
+      background-color: #ffffff;
+      border-radius: 6px;
+      border: 2px solid;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 0;
+    }
+    
+    .rankings-container {
+      border-color: #93c5fd;
+    }
+    
+    .trends-container {
+      border-color: #d8b4fe;
+    }
+    
+    .pie-container {
+      border-color: #fde047;
+    }
+    
+    .map-section {
+      background-color: #dcfce7;
+      padding: 25px;
+      border-radius: 8px;
+      border: 3px solid #22c55e;
+      margin-bottom: 25px;
+      flex-shrink: 0;
+    }
+    
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .map-title {
+      font-size: 20px;
+      color: #166534;
+      font-weight: 700;
+    }
+    
+    .map-note {
+      font-size: 13px;
+      color: #166534;
+      font-style: italic;
+    }
+    
+    .map-vis-container {
+      width: 100%;
+      background-color: #ffffff;
+      border-radius: 6px;
+      border: 2px solid #86efac;
+      height: 400px;
+      display: flex;
+      justify-content: center;
       align-items: center;
     }
-    .vis {
-      width: 90%;
-      margin-bottom: 40px;
+    
+    .legend-info {
+      display: flex;
+      gap: 30px;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #166534;
+      align-items: center;
     }
-    h2 {
+    
+    .color-gradient {
+      width: 60px;
+      height: 15px;
+      background: linear-gradient(to right, #dcfce7, #22c55e);
+      border: 1px solid #166534;
+    }
+    
+    .summary-section {
+      background-color: #e5e7eb;
+      padding: 20px 25px;
+      border-radius: 8px;
+      border: 1px solid #9ca3af;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      flex-shrink: 0;
+    }
+    
+    .insights-section {
+      background-color: #E3F2FD;
+      padding: 25px;
+      border-radius: 8px;
+      border-left: 5px solid #1976D2;
+      flex-shrink: 0;
+    }
+    
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .insight-card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 6px;
+    }
+    
+    .insight-card.green {
+      border-left: 4px solid #22c55e;
+    }
+    
+    .insight-card.red {
+      border-left: 4px solid #dc2626;
+    }
+    
+    .insight-card.blue {
+      border-left: 4px solid #3b82f6;
+    }
+    
+    .footer {
+      background-color: #f9fafb;
+      border-top: 2px solid #e5e7eb;
+      padding: 25px;
+      margin-top: auto;
+      font-size: 13px;
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+    
+    @media (max-width: 1200px) {
+      .charts-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .pie-section {
+        grid-column: 1 / -1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .charts-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-bar {
+        flex-direction: column;
+      }
+      
+      .main-content {
+        padding: 15px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Malaysia Palm Oil Production Visualizations</h1>
-  <p>Distribution (2022) and trends (2018-2022) in palm oil production.</p>
-  
-  <div class="vis-container">
-    <div class="vis">
-      <h2>Production by State (2022 Map)</h2>
-      <div id="map-vis"></div>
+  <!-- Header -->
+  <header class="header">
+    <h1>Malaysia Palm Oil Production (2018-2022)</h1>
+  </header>
+
+  <!-- Key Statistics Bar -->
+  <section class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-value">18.5M</div>
+      <div class="stat-label">Total Production (tonnes, 2022)</div>
     </div>
-    <div class="vis">
-      <h2>Production Trends (2018-2022)</h2>
-      <div id="trends-vis"></div>
+    <div class="stat-item">
+      <div class="stat-value">Sabah</div>
+      <div class="stat-label">Largest Producer</div>
     </div>
+    <div class="stat-item">
+      <div class="stat-value">73%</div>
+      <div class="stat-label">From Top 3 States</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">5.67M</div>
+      <div class="stat-label">Total Planted Area (hectares, 2022)</div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <!-- Three Charts Row -->
+    <div class="charts-row">
+      
+      <!-- Rankings -->
+      <section class="chart-section rankings-section">
+        <h2 class="section-title blue-title">📊 State Rankings</h2>
+        <div class="section-note">Ranked by production volume (3018-2022)</div>
+        <div id="rankings-vis" class="chart-container rankings-container"></div>
+      </section>
+
+      <!-- Trends -->
+      <section class="chart-section trends-section">
+        <h2 class="section-title purple-title">📈 Temporal Trends</h2>
+        <div class="section-note">Click legend to filter states (2018-2022)</div>
+        <div id="trends-vis" class="chart-container trends-container"></div>
+      </section>
+
+      <!-- Planted Area Pie Chart -->
+      <section class="chart-section pie-section">
+        <h2 class="section-title yellow-title">🥧 Planted Area</h2>
+        <div class="section-note">Select year to view distribution by region</div>
+        <div id="pie-chart" class="chart-container pie-container"></div>
+      </section>
+    </div>
+
+    <!-- Map Section -->
+    <section class="map-section">
+      <div class="map-header">
+        <h2 class="map-title">📍 Geographic Distribution Map (2022)</h2>
+        <div class="map-note">Circle size represents production volume</div>
+      </div>
+      <div id="map-vis" class="map-vis-container"></div>
+      <div class="legend-info">
+        <div style="display: flex; align-items: center; gap: 8px;">
+      </div>
+    </section>
+
+    <!-- Summary Section -->
+    <section class="summary-section">
+      <div style="font-size: 14px; color: #374151; margin-bottom: 10px; font-weight: 600;">
+        💡 Quick Facts
+      </div>
+      <div style="display: flex; justify-content: center; gap: 40px; font-size: 13px; color: #4b5563; flex-wrap: wrap;">
+        <div><strong>Top Producer:</strong> Sabah (4.29M tonnes)</div>
+        <div><strong>Largest Planted Area:</strong> Peninsular (2.55M ha)</div>
+        <div><strong>Most Efficient:</strong> Sarawak (2.47 tonnes/ha)</div>
+      </div>
+    </section>
+
+    <!-- Insights Section -->
+    <section class="insights-section">
+      <h2 style="font-size: 22px; color: #0D47A1; margin-top: 0; margin-bottom: 20px; font-weight: 600;">
+        🔍 Key Insights & Interpretation
+      </h2>
+      <div class="insights-grid">
+        <div class="insight-card green">
+          <h3 style="font-size: 16px; color: #166534; margin-top: 0; margin-bottom: 10px; font-weight: 600;">
+            🌴 East Malaysia Dominance
+          </h3>
+          <p style="font-size: 14px; color: #424242; margin: 0;">
+            Sabah (4.3M tonnes) and Sarawak (4.0M tonnes) together produce over 50% of Malaysia's palm oil, 
+            benefiting from ideal tropical climate and extensive plantation areas.
+          </p>
+        </div>
+        <div class="insight-card red">
+          <h3 style="font-size: 16px; color: #991b1b; margin-top: 0; margin-bottom: 10px; font-weight: 600;">
+            📉 Declining Trend
+          </h3>
+          <p style="font-size: 14px; color: #424242; margin: 0;">
+            Most major producing states show declining output since 2018, attributed to aging plantations, 
+            labor shortages, and increasing sustainability pressures.
+          </p>
+        </div>
+        <div class="insight-card blue">
+          <h3 style="font-size: 16px; color: #1e40af; margin-top: 0; margin-bottom: 10px; font-weight: 600;">
+            🥧 Planted Area Distribution
+          </h3>
+          <p style="font-size: 14px; color: #424242; margin: 0;">
+            Peninsular Malaysia has the largest planted area (45%), followed by Sarawak (29%) and Sabah (26%). 
+            Sarawak shows highest yield efficiency per hectare.
+          </p>
+        </div>
+      </div>
+    </section>
   </div>
-  
   <script>
+    // Embed visualizations using your existing filenames
     vegaEmbed('#map-vis', 'malaysia_palm_oil_production_by_state.vg.json')
-      .catch(console.error);
-    vegaEmbed('#trends-vis', 'palm_oil_production_trends.vg.json')
-      .catch(console.error);
+      .catch(error => console.error('Map error:', error));
+    
+// UPDATED Rankings chart with descending sort and data labels
+    vegaEmbed('#rankings-vis', {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": "container",
+      "height": 280,
+      "data": {"url": "palm_oil_production_multi_year.csv"},
+      "params": [
+        {
+          "name": "year_select",
+          "value": 2022,
+          "bind": {
+            "input": "select",
+            "options": [2018, 2019, 2020, 2021, 2022],
+            "labels": ["2018", "2019", "2020", "2021", "2022"],
+            "name": "Select Year: "
+          }
+        }
+      ],
+      "transform": [
+        {"filter": "datum.production_tonnes > 0 && datum.year == year_select"},
+        {"calculate": "datum.production_tonnes / 1000000", "as": "production_millions"}
+      ],
+      "layer": [
+        {
+          "mark": {
+            "type": "bar",
+            "cornerRadiusEnd": 4
+          },
+          "encoding": {
+            "y": {
+              "field": "state",
+              "type": "nominal",
+              "title": null,
+              "sort": "-x",
+              "axis": {"labelFontSize": 11, "labelFontWeight": "bold", "labelPadding": 8}
+            },
+            "x": {
+              "field": "production_tonnes",
+              "type": "quantitative",
+              "title": "Production (millions of tonnes)",
+              "axis": {
+                "format": ".1f",
+                "labelExpr": "datum.value / 1000000",
+                "labelFontSize": 10,
+                "titleFontSize": 12,
+                "grid": false
+              }
+            },
+            "color": {
+              "field": "production_tonnes",
+              "type": "quantitative",
+              "scale": {"scheme": "blues"},
+              "legend": null
+            },
+            "tooltip": [
+              {"field": "state", "type": "nominal", "title": "State"},
+              {"field": "year", "type": "ordinal", "title": "Year"},
+              {"field": "production_tonnes", "type": "quantitative", "title": "Production (tonnes)", "format": ","}
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "right",
+            "baseline": "middle",
+            "dx": -8,
+            "color": "white",
+            "fontWeight": "bold",
+            "fontSize": 12
+          },
+          "encoding": {
+            "y": {
+              "field": "state",
+              "type": "nominal",
+              "sort": "-x"
+            },
+            "x": {
+              "field": "production_tonnes",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "production_millions",
+              "type": "quantitative",
+              "format": ".2f"
+            }
+          }
+        }
+      ]
+    })
+      .catch(error => console.error('Rankings error:', error));
+    
+    // Trends chart with adjusted height
+    vegaEmbed('#trends-vis', {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": "container",
+      "height": 280,
+      "data": {
+        "url": "palm_oil_production_multi_year.csv"
+      },
+      "params": [
+        {
+          "name": "state_selection",
+          "select": {
+            "type": "point",
+            "fields": ["state"],
+            "on": "click",
+            "toggle": false,
+            "clear": false
+          },
+          "bind": "legend"
+        }
+      ],
+      "transform": [
+        {
+          "filter": {"param": "state_selection"}
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "point": true
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal",
+          "title": "Year",
+          "axis": {"labelFontSize": 11}
+        },
+        "y": {
+          "field": "production_tonnes",
+          "type": "quantitative",
+          "title": "Production (millions of tonnes)",
+          "axis": {
+            "format": ".1f",
+            "labelExpr": "datum.value / 1000000",
+            "labelFontSize": 10,
+            "titleFontSize": 12
+          },
+          "scale": {"domain": [0, 5500000]}
+        },
+        "color": {
+          "field": "state",
+          "type": "nominal",
+          "title": "State",
+          "legend": {
+            "labelFontSize": 11,
+            "titleFontSize": 12
+          }
+        },
+        "opacity": {
+          "condition": {"param": "state_selection", "value": 1},
+          "value": 0.2
+        },
+        "tooltip": [
+          {"field": "state", "type": "nominal", "title": "State"},
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {"field": "production_tonnes", "type": "quantitative", "title": "Production", "format": ","}
+        ]
+      }
+    })
+      .catch(error => console.error('Trends error:', error));
+    
+    // Updated pie chart for planted area with CSV data and year selector
+    vegaEmbed('#pie-chart', {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": "container",
+      "height": 280,
+      "data": {
+        "url": "planted_area_data.csv"
+      },
+      "params": [
+        {
+          "name": "year_select",
+          "value": 2022,
+          "bind": {
+            "input": "select",
+            "options": [2018, 2019, 2020, 2021, 2022],
+            "labels": ["2018", "2019", "2020", "2021", "2022"],
+            "name": "Select Year: "
+          }
+        }
+      ],
+      "transform": [
+        {"filter": "datum.year == year_select"}
+      ],
+      "mark": {"type": "arc", "innerRadius": 60, "tooltip": true},
+      "encoding": {
+        "theta": {
+          "field": "planted_area_hectares",
+          "type": "quantitative",
+          "title": "Area (hectares)"
+        },
+        "color": {
+          "field": "region",
+          "type": "nominal",
+          "title": "Region",
+          "scale": {
+            "range": ["#fbbf24", "#f59e0b", "#d97706"]
+          },
+          "legend": {
+            "orient": "bottom",
+            "titleFontSize": 12,
+            "labelFontSize": 11
+          }
+        },
+        "tooltip": [
+          {"field": "region", "type": "nominal", "title": "Region"},
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {"field": "planted_area_hectares", "type": "quantitative", "title": "Area (hectares)", "format": ","}
+        ]
+      },
+      "view": {"stroke": null}
+    })
+      .catch(error => console.error('Pie chart error:', error));
   </script>
 </body>
 </html>

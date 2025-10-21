@@ -1,0 +1,53 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Planted Area Under Oil Palm (2018-2022)",
+  "width": 400,
+  "height": 400,
+  "data": {
+    "url": "planted_area_data.csv"
+  },
+  "params": [
+    {
+      "name": "year_select",
+      "value": 2022,
+      "bind": {
+        "input": "select",
+        "options": [2018, 2019, 2020, 2021, 2022],
+        "labels": ["2018", "2019", "2020", "2021", "2022"],
+        "name": "Select Year: "
+      }
+    }
+  ],
+  "transform": [
+    {"filter": "datum.year == year_select"}
+  ],
+  "mark": {"type": "arc", "innerRadius": 50},
+  "encoding": {
+    "theta": {
+      "field": "planted_area_hectares",
+      "type": "quantitative",
+      "title": "Area (hectares)"
+    },
+    "color": {
+      "field": "region",
+      "type": "nominal",
+      "title": "Region",
+      "scale": {
+        "range": ["#1f77b4", "#ff7f0e", "#2ca02c"]
+      }
+    },
+    "tooltip": [
+      {"field": "region", "type": "nominal", "title": "Region"},
+      {"field": "year", "type": "ordinal", "title": "Year"},
+      {"field": "planted_area_hectares", "type": "quantitative", "title": "Area (hectares)", "format": ","},
+      {
+        "field": "planted_area_hectares",
+        "type": "quantitative",
+        "aggregate": "sum",
+        "title": "Percentage",
+        "format": ".1%"
+      }
+    ]
+  },
+  "view": {"stroke": null}
+}
