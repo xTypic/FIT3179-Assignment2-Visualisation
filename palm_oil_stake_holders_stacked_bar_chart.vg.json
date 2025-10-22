@@ -1,0 +1,50 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 280,
+  "data": {
+    "url": "palm_oil_production_stake_holders.csv"
+  },
+  "transform": [
+    {"filter": "datum.State != 'Peninsular' && datum.State != 'Sabah' && datum.State != 'Sarawak' && datum.State != 'Total'"},
+    {"fold": ["Estate & Organized Smallholders", "Independent Smallholders"], "as": ["Stakeholder Type", "Hectares"]}
+  ],
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "State",
+      "type": "nominal",
+      "title": null,
+      "sort": "-x",
+      "axis": {"labelFontSize": 11, "labelFontWeight": "bold"}
+    },
+    "x": {
+      "field": "Hectares",
+      "type": "quantitative",
+      "title": "Planted Area (hectares)",
+      "axis": {
+        "format": "~s",
+        "labelFontSize": 10,
+        "titleFontSize": 12
+      }
+    },
+    "color": {
+      "field": "Stakeholder Type",
+      "type": "nominal",
+      "scale": {
+        "domain": ["Estate & Organized Smallholders", "Independent Smallholders"],
+        "range": ["#ec4899", "#f9a8d4"]
+      },
+      "legend": {
+        "orient": "bottom",
+        "titleFontSize": 11,
+        "labelFontSize": 10
+      }
+    },
+    "tooltip": [
+      {"field": "State", "type": "nominal", "title": "State"},
+      {"field": "Stakeholder Type", "type": "nominal", "title": "Type"},
+      {"field": "Hectares", "type": "quantitative", "title": "Hectares", "format": ","}
+    ]
+  }
+}

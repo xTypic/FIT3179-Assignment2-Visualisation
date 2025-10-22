@@ -43,30 +43,63 @@
     }
     
     .stats-bar {
-      background-color: #fef3c7;
-      padding: 20px 30px;
+      background-color: #fef6c7;
+      padding: 10px 10px;
       border-bottom: 2px solid #f59e0b;
       display: flex;
       justify-content: space-around;
       align-items: center;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 1px;
       flex-shrink: 0;
     }
     
     .stat-item {
       text-align: center;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      min-width: 180px;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .stat-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stat-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
     
     .stat-value {
       font-size: 32px;
       font-weight: 700;
       color: #92400e;
+      margin: 8px 0;
     }
     
     .stat-label {
       font-size: 14px;
       color: #78350f;
+      font-weight: 500;
     }
     
     .main-content {
@@ -81,7 +114,16 @@
     
     .charts-row {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 25px;
+      flex: 1;
+      min-height: 0;
+    }
+    
+    .bottom-charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 25px;
       margin-bottom: 25px;
       flex: 1;
@@ -111,6 +153,11 @@
       border: 2px solid #eab308;
     }
     
+    .stakeholders-section {
+      background-color: #fce7f3;
+      border: 2px solid #ec4899;
+    }
+    
     .section-title {
       font-size: 18px;
       font-weight: 700;
@@ -130,6 +177,10 @@
     
     .yellow-title {
       color: #854d0e;
+    }
+    
+    .pink-title {
+      color: #9f1239;
     }
     
     .section-note {
@@ -160,6 +211,10 @@
     
     .pie-container {
       border-color: #fde047;
+    }
+    
+    .stakeholders-container {
+      border-color: #fbcfe8;
     }
     
     .map-section {
@@ -270,7 +325,7 @@
     }
     
     @media (max-width: 1200px) {
-      .charts-row {
+      .charts-row, .bottom-charts-row {
         grid-template-columns: 1fr 1fr;
       }
       
@@ -280,7 +335,7 @@
     }
     
     @media (max-width: 768px) {
-      .charts-row {
+      .charts-row, .bottom-charts-row {
         grid-template-columns: 1fr;
       }
       
@@ -303,33 +358,52 @@
   <!-- Key Statistics Bar -->
   <section class="stats-bar">
     <div class="stat-item">
+      <div class="stat-icon">
+        <img src="icons/palm-oil.png" alt="Production">
+      </div>
       <div class="stat-value">18.5M</div>
       <div class="stat-label">Total Production (tonnes, 2022)</div>
     </div>
     <div class="stat-item">
+      <div class="stat-icon">
+        <img src="icons/up-arrow.png" alt="Top Producer">
+      </div>
       <div class="stat-value">Sabah</div>
       <div class="stat-label">Largest Producer</div>
     </div>
     <div class="stat-item">
+      <div class="stat-icon">
+        <img src="icons/analytics.png" alt="Percentage">
+      </div>
       <div class="stat-value">73%</div>
       <div class="stat-label">From Top 3 States</div>
     </div>
     <div class="stat-item">
+      <div class="stat-icon">
+        <img src="icons/area-graph.png" alt="Area">
+      </div>
       <div class="stat-value">5.67M</div>
       <div class="stat-label">Total Planted Area (hectares, 2022)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">
+        <img src="icons/clock.png" alt="Efficiency">
+      </div>
+      <div class="stat-value">2.47</div>
+      <div class="stat-label">Most Efficient (tonnes/ha, Sarawak)</div>
     </div>
   </section>
 
   <!-- Main Content -->
   <div class="main-content">
     
-    <!-- Three Charts Row -->
+    <!-- Top Three Charts Row -->
     <div class="charts-row">
       
       <!-- Rankings -->
       <section class="chart-section rankings-section">
         <h2 class="section-title blue-title">📊 State Rankings</h2>
-        <div class="section-note">Ranked by production volume (3018-2022)</div>
+        <div class="section-note">Ranked by production volume (2018-2022)</div>
         <div id="rankings-vis" class="chart-container rankings-container"></div>
       </section>
 
@@ -339,12 +413,22 @@
         <div class="section-note">Click legend to filter states (2018-2022)</div>
         <div id="trends-vis" class="chart-container trends-container"></div>
       </section>
+    </div>
 
+    <!-- Bottom Two Charts Row -->
+    <div class="bottom-charts-row">
       <!-- Planted Area Pie Chart -->
       <section class="chart-section pie-section">
         <h2 class="section-title yellow-title">🥧 Planted Area</h2>
         <div class="section-note">Select year to view distribution by region</div>
         <div id="pie-chart" class="chart-container pie-container"></div>
+      </section>
+
+      <!-- Stakeholders Stacked Bar Chart -->
+      <section class="chart-section stakeholders-section">
+        <h2 class="section-title pink-title">👥 Stakeholder Distribution</h2>
+        <div class="section-note">Planted area by state and stakeholder type</div>
+        <div id="stakeholders-vis" class="chart-container stakeholders-container"></div>
       </section>
     </div>
 
@@ -369,6 +453,7 @@
         <div><strong>Top Producer:</strong> Sabah (4.29M tonnes)</div>
         <div><strong>Largest Planted Area:</strong> Peninsular (2.55M ha)</div>
         <div><strong>Most Efficient:</strong> Sarawak (2.47 tonnes/ha)</div>
+        <div><strong>Estate Dominance:</strong> 85.6% of planted area</div>
       </div>
     </section>
 
@@ -408,226 +493,23 @@
       </div>
     </section>
   </div>
+
   <script>
-    // Embed visualizations using your existing filenames
+    // Load all visualizations from external JSON files
     vegaEmbed('#map-vis', 'malaysia_palm_oil_production_by_state.vg.json')
       .catch(error => console.error('Map error:', error));
     
-// UPDATED Rankings chart with descending sort and data labels
-    vegaEmbed('#rankings-vis', {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": "container",
-      "height": 280,
-      "data": {"url": "palm_oil_production_multi_year.csv"},
-      "params": [
-        {
-          "name": "year_select",
-          "value": 2022,
-          "bind": {
-            "input": "select",
-            "options": [2018, 2019, 2020, 2021, 2022],
-            "labels": ["2018", "2019", "2020", "2021", "2022"],
-            "name": "Select Year: "
-          }
-        }
-      ],
-      "transform": [
-        {"filter": "datum.production_tonnes > 0 && datum.year == year_select"},
-        {"calculate": "datum.production_tonnes / 1000000", "as": "production_millions"}
-      ],
-      "layer": [
-        {
-          "mark": {
-            "type": "bar",
-            "cornerRadiusEnd": 4
-          },
-          "encoding": {
-            "y": {
-              "field": "state",
-              "type": "nominal",
-              "title": null,
-              "sort": "-x",
-              "axis": {"labelFontSize": 11, "labelFontWeight": "bold", "labelPadding": 8}
-            },
-            "x": {
-              "field": "production_tonnes",
-              "type": "quantitative",
-              "title": "Production (millions of tonnes)",
-              "axis": {
-                "format": ".1f",
-                "labelExpr": "datum.value / 1000000",
-                "labelFontSize": 10,
-                "titleFontSize": 12,
-                "grid": false
-              }
-            },
-            "color": {
-              "field": "production_tonnes",
-              "type": "quantitative",
-              "scale": {"scheme": "blues"},
-              "legend": null
-            },
-            "tooltip": [
-              {"field": "state", "type": "nominal", "title": "State"},
-              {"field": "year", "type": "ordinal", "title": "Year"},
-              {"field": "production_tonnes", "type": "quantitative", "title": "Production (tonnes)", "format": ","}
-            ]
-          }
-        },
-        {
-          "mark": {
-            "type": "text",
-            "align": "right",
-            "baseline": "middle",
-            "dx": -8,
-            "color": "white",
-            "fontWeight": "bold",
-            "fontSize": 12
-          },
-          "encoding": {
-            "y": {
-              "field": "state",
-              "type": "nominal",
-              "sort": "-x"
-            },
-            "x": {
-              "field": "production_tonnes",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "production_millions",
-              "type": "quantitative",
-              "format": ".2f"
-            }
-          }
-        }
-      ]
-    })
+    vegaEmbed('#rankings-vis', 'palm_oil_production_rankings.vg.json')
       .catch(error => console.error('Rankings error:', error));
     
-    // Trends chart with adjusted height
-    vegaEmbed('#trends-vis', {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": "container",
-      "height": 280,
-      "data": {
-        "url": "palm_oil_production_multi_year.csv"
-      },
-      "params": [
-        {
-          "name": "state_selection",
-          "select": {
-            "type": "point",
-            "fields": ["state"],
-            "on": "click",
-            "toggle": false,
-            "clear": false
-          },
-          "bind": "legend"
-        }
-      ],
-      "transform": [
-        {
-          "filter": {"param": "state_selection"}
-        }
-      ],
-      "mark": {
-        "type": "line",
-        "point": true
-      },
-      "encoding": {
-        "x": {
-          "field": "year",
-          "type": "ordinal",
-          "title": "Year",
-          "axis": {"labelFontSize": 11}
-        },
-        "y": {
-          "field": "production_tonnes",
-          "type": "quantitative",
-          "title": "Production (millions of tonnes)",
-          "axis": {
-            "format": ".1f",
-            "labelExpr": "datum.value / 1000000",
-            "labelFontSize": 10,
-            "titleFontSize": 12
-          },
-          "scale": {"domain": [0, 5500000]}
-        },
-        "color": {
-          "field": "state",
-          "type": "nominal",
-          "title": "State",
-          "legend": {
-            "labelFontSize": 11,
-            "titleFontSize": 12
-          }
-        },
-        "opacity": {
-          "condition": {"param": "state_selection", "value": 1},
-          "value": 0.2
-        },
-        "tooltip": [
-          {"field": "state", "type": "nominal", "title": "State"},
-          {"field": "year", "type": "ordinal", "title": "Year"},
-          {"field": "production_tonnes", "type": "quantitative", "title": "Production", "format": ","}
-        ]
-      }
-    })
+    vegaEmbed('#trends-vis', 'palm_oil_production_trends.vg.json')
       .catch(error => console.error('Trends error:', error));
     
-    // Updated pie chart for planted area with CSV data and year selector
-    vegaEmbed('#pie-chart', {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": "container",
-      "height": 280,
-      "data": {
-        "url": "planted_area_data.csv"
-      },
-      "params": [
-        {
-          "name": "year_select",
-          "value": 2022,
-          "bind": {
-            "input": "select",
-            "options": [2018, 2019, 2020, 2021, 2022],
-            "labels": ["2018", "2019", "2020", "2021", "2022"],
-            "name": "Select Year: "
-          }
-        }
-      ],
-      "transform": [
-        {"filter": "datum.year == year_select"}
-      ],
-      "mark": {"type": "arc", "innerRadius": 60, "tooltip": true},
-      "encoding": {
-        "theta": {
-          "field": "planted_area_hectares",
-          "type": "quantitative",
-          "title": "Area (hectares)"
-        },
-        "color": {
-          "field": "region",
-          "type": "nominal",
-          "title": "Region",
-          "scale": {
-            "range": ["#fbbf24", "#f59e0b", "#d97706"]
-          },
-          "legend": {
-            "orient": "bottom",
-            "titleFontSize": 12,
-            "labelFontSize": 11
-          }
-        },
-        "tooltip": [
-          {"field": "region", "type": "nominal", "title": "Region"},
-          {"field": "year", "type": "ordinal", "title": "Year"},
-          {"field": "planted_area_hectares", "type": "quantitative", "title": "Area (hectares)", "format": ","}
-        ]
-      },
-      "view": {"stroke": null}
-    })
+    vegaEmbed('#pie-chart', 'planted_area_pie.vg.json')
       .catch(error => console.error('Pie chart error:', error));
+
+    vegaEmbed('#stakeholders-vis', 'palm_oil_stake_holders_stacked_bar_chart.vg.json')
+      .catch(error => console.error('Stakeholders error:', error));
   </script>
 </body>
 </html>

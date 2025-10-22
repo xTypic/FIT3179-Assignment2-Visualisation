@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": "container",
-  "height": 380,
+  "height": 280,
   "data": {"url": "palm_oil_production_multi_year.csv"},
   "params": [
     {
@@ -16,42 +16,74 @@
     }
   ],
   "transform": [
-    {"filter": "datum.production_tonnes > 0 && datum.year == year_select"}
+    {"filter": "datum.production_tonnes > 0 && datum.year == year_select"},
+    {"calculate": "datum.production_tonnes / 1000000", "as": "production_millions"}
   ],
-  "mark": {
-    "type": "bar",
-    "cornerRadiusEnd": 4
-  },
-  "encoding": {
-    "y": {
-      "field": "state",
-      "type": "nominal",
-      "title": null,
-      "sort": {"field": "production_tonnes", "order": "descending"},
-      "axis": {"labelFontSize": 12, "labelFontWeight": "bold", "labelPadding": 10}
-    },
-    "x": {
-      "field": "production_tonnes",
-      "type": "quantitative",
-      "title": "Production (millions of tonnes)",
-      "axis": {
-        "format": ".1f",
-        "labelExpr": "datum.value / 1000000",
-        "labelFontSize": 11,
-        "titleFontSize": 12,
-        "grid": true
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "cornerRadiusEnd": 4
+      },
+      "encoding": {
+        "y": {
+          "field": "state",
+          "type": "nominal",
+          "title": null,
+          "sort": "-x",
+          "axis": {"labelFontSize": 11, "labelFontWeight": "bold", "labelPadding": 8}
+        },
+        "x": {
+          "field": "production_tonnes",
+          "type": "quantitative",
+          "title": "Production (millions of tonnes)",
+          "axis": {
+            "format": ".1f",
+            "labelExpr": "datum.value / 1000000",
+            "labelFontSize": 10,
+            "titleFontSize": 12,
+            "grid": false
+          }
+        },
+        "color": {
+          "field": "production_tonnes",
+          "type": "quantitative",
+          "scale": {"scheme": "blues"},
+          "legend": null
+        },
+        "tooltip": [
+          {"field": "state", "type": "nominal", "title": "State"},
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {"field": "production_tonnes", "type": "quantitative", "title": "Production (tonnes)", "format": ","}
+        ]
       }
     },
-    "color": {
-      "field": "production_tonnes",
-      "type": "quantitative",
-      "scale": {"scheme": "blues"},
-      "legend": null
-    },
-    "tooltip": [
-      {"field": "state", "type": "nominal", "title": "State"},
-      {"field": "year", "type": "ordinal", "title": "Year"},
-      {"field": "production_tonnes", "type": "quantitative", "title": "Production (tonnes)", "format": ","}
-    ]
-  }
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "middle",
+        "dx": -8,
+        "color": "white",
+        "fontWeight": "bold",
+        "fontSize": 12
+      },
+      "encoding": {
+        "y": {
+          "field": "state",
+          "type": "nominal",
+          "sort": "-x"
+        },
+        "x": {
+          "field": "production_tonnes",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "production_millions",
+          "type": "quantitative",
+          "format": ".2f"
+        }
+      }
+    }
+  ]
 }
